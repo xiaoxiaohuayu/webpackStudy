@@ -1,0 +1,10 @@
+// leo.scss
+$bg-color: #ee3;
+.box{
+    height: 500px;
+    width: 500px;
+    background-color: $bg-color;
+    display: flex;
+    background: url("../assets/001.jpeg");
+    background-size: contain;
+}
