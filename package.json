@@ -1,0 +1,28 @@
+{
+  "name": "webpackvue",
+  "version": "1.0.0",
+  "description": "hao",
+  "main": "main.js",
+  "scripts": {
+    "1": "webpack --config ./build/webpack.config.js --mode=development",
+    "build": "webpack ./src/index.js --mode=development"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xiaoxiaohuayu/webpackStudy.git"
+  },
+  "author": "hao",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xiaoxiaohuayu/webpackStudy/issues"
+  },
+  "homepage": "https://github.com/xiaoxiaohuayu/webpackStudy#readme",
+  "dependencies": {
+    "html-webpack-plugin": "^5.5.0",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0"
+  },
+  "devDependencies": {
+    "clean-webpack-plugin": "^4.0.0"
+  }
+}
