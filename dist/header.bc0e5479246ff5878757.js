@@ -15,7 +15,7 @@
   \***********************/
 /***/ (() => {
 
-eval("console.log(\"Headers\");\n\n\n//# sourceURL=webpack://webpackvue/./src/header.js?");
+eval("console.log(\"Headers\");\n\n//# sourceURL=webpack://webpackvue/./src/header.js?");
 
 /***/ })
 

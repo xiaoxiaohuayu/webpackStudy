@@ -1,3 +1,9 @@
 body {
-  background-color: blueviolet;
+  /* background-color: blueviolet; */
+  background-image: url("/src/assets/889.png");
+}
+.time_bg {
+  width: 200px;
+  height: 200px;
+  background-image: url("/src/assets/2.png");
 }

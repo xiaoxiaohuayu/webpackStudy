@@ -7,7 +7,10 @@ let time = new Date().getTime() + "";
 module.exports = {
   mode: "development", // 模式
   entry: {
-    main: path.resolve(__dirname, "../src/index.js"), // 入口文件
+    // main: {
+    //   import: path.resolve(__dirname, "../src/index.js"),
+    // }, // 入口文件
+    main: ["@babel/polyfill", path.resolve(__dirname, "../src/index.js")], // 入口文件
     header: path.resolve(__dirname, "../src/header.js"), // 入口文件
   },
   output: {
@@ -26,7 +29,7 @@ module.exports = {
       // filename: "aa.html",
       template: path.resolve(__dirname, "../public/index.html"),
       templateContent: () => {
-        return time;
+        return `<div class='time_bg'>时间戳:${time}</div>`;
       },
       inject: true, // true || 'head' || 'body' || false将所有资源注入到给定的 或 中。当传递时，所有javascript资源都将放置在body元素的底部。 会将脚本放在 head 元素中。通过会将其添加到头部/身体，具体取决于选项。通过将禁用自动注入。
       publicPath: "./",
@@ -52,7 +55,21 @@ module.exports = {
     unsafeCache: false, // 开启缓存模块的来自 node_modules
     rules: [
       {
-        test: /\.css$/,
+        test: /\.js$/,
+        use: {
+          // babel-loader只会将 ES6/7/8语法转换为ES5语法 但是对新api并不会转换
+          // 例如(promise、Generator、Set、Maps、Proxy、Reflect、Symbol、Iterator、Proxy、Promise、Set、Maps、Proxy、Reflect、Symbol、Iterator)
+          // 这时候就需要babel-polyfill 去转换了
+          loader: "babel-loader",
+          options: {
+            presets: ["@babel/preset-env"],
+          },
+        },
+        // 排除node_modules文件夹下的文件
+        exclude: /node_modules/,
+      },
+      {
+        test: /\.css$/, //css样式
         use: [
           "style-loader",
           {
@@ -67,6 +84,58 @@ module.exports = {
             options: {
               postcssOptions: {
                 plugins: () => [require("autoprefixer")],
+              },
+            },
+          },
+        ],
+      },
+      {
+        test: /\.(jpe?g|png|gif)$/i, // 图片资源
+        use: [
+          {
+            loader: "url-loader",
+            options: {
+              limit: 8192, // 小于8kb的图片自动转成base64格式，并且不会存在实体图片
+              fallback: {
+                // 如果大于8kb的图片使用file-loader来处理 也可以去用其他的
+                loader: "file-loader",
+                options: {
+                  name: "img/[name].[hash:8].[ext]",
+                },
+              },
+            },
+          },
+        ],
+      },
+      {
+        test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/, //媒体文件
+        use: [
+          {
+            loader: "url-loader",
+            options: {
+              limit: 10240,
+              fallback: {
+                loader: "file-loader",
+                options: {
+                  name: "media/[name].[hash:8].[ext]",
+                },
+              },
+            },
+          },
+        ],
+      },
+      {
+        test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/i, // 字体
+        use: [
+          {
+            loader: "url-loader",
+            options: {
+              limit: 10240,
+              fallback: {
+                loader: "file-loader",
+                options: {
+                  name: "fonts/[name].[hash:8].[ext]",
+                },
               },
             },
           },

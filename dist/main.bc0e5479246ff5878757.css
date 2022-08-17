@@ -1,0 +1,13 @@
+/*!*******************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[1].use[3]!./src/css/index.css ***!
+  \*******************************************************************************************************************************************/
+body {
+  /* background-color: blueviolet; */
+  background-image: url(c361374b30608a734626.png);
+}
+.time_bg {
+  width: 200px;
+  height: 200px;
+  background-image: url(702cf41cb036fb12fedf.png);
+}
+
