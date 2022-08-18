@@ -3,7 +3,7 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin"); // 将打包好的js文件插入到html文件中
 const { CleanWebpackPlugin } = require("clean-webpack-plugin"); //清除dist文件夹
 const MiniCssExtractPlugin = require("mini-css-extract-plugin"); // 将css提取到单独的文件中
-let time = new Date().getTime() + "";
+const { VueLoaderPlugin } = require("vue-loader");
 module.exports = {
   mode: "development", // 模式
   entry: {
@@ -20,17 +20,16 @@ module.exports = {
   // 插件
   plugins: [
     new CleanWebpackPlugin(), // 清除dist目录
+    new VueLoaderPlugin(), // vue-loader插件
+    new webpack.HotModuleReplacementPlugin(), // 热更新插件
     new MiniCssExtractPlugin({
       filename: "[name].[fullhash].css", // 打包后的css文件名称
       // chunkFilename: "[id].css", // 分包的css文件名称
     }), // 将css提取到单独的文件中
     new HtmlWebpackPlugin({
       title: "webpack",
-      // filename: "aa.html",
+      // filename: "index.html",
       template: path.resolve(__dirname, "../public/index.html"),
-      templateContent: () => {
-        return `<div class='time_bg'>时间戳:${time}</div>`;
-      },
       inject: true, // true || 'head' || 'body' || false将所有资源注入到给定的 或 中。当传递时，所有javascript资源都将放置在body元素的底部。 会将脚本放在 head 元素中。通过会将其添加到头部/身体，具体取决于选项。通过将禁用自动注入。
       publicPath: "./",
       scriptLoading: "blocking", // blocking || defer || module 现代浏览器支持非阻塞 javascript loading() 以提高页面启动性能。设置为添加属性 type="module"。这也意味着“延迟”，因为模块会自动延迟。'defer''module'
@@ -38,9 +37,17 @@ module.exports = {
       meta: {
         viewport: "width=device-width, initial-scale=1, shrink-to-fit=no",
       },
-      minify: "production", // {Boolean|Object} || mode || 'production' || false  压缩html
-      hash: !true, // {Boolean} 后面加hash
-      cache: true, // {Boolean} 缓存
+      // minify: "production", // {Boolean|Object} || mode || 'production' || false  压缩html
+      minify: {
+        html5: true,
+        collapseWhitespace: true,
+        preserveLineBreaks: false,
+        minifyCSS: true,
+        minifyJS: true,
+        removeComments: false,
+      },
+      // hash: !true, // {Boolean} 后面加hash
+      // cache: !true, // {Boolean} 缓存
       showErrors: true, // 如果出现错误 将错误写入html
       chunks: ["main"], // 与入口文件对应的模块名
     }),
@@ -51,6 +58,15 @@ module.exports = {
       chunks: ["header"], // 与入口文件对应的模块名
     }),
   ],
+  resolve: {
+    // 别名，方便引入文件
+    alias: {
+      vue$: "vue/dist/vue.runtime.esm.js",
+      " @": path.resolve(__dirname, "../src"),
+    },
+    // 以下文件不需要写后缀名就可以导入
+    extensions: ["*", ".js", ".json", ".vue"],
+  },
   module: {
     unsafeCache: false, // 开启缓存模块的来自 node_modules
     rules: [
@@ -69,9 +85,14 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
+        test: /\.vue$/,
+        use: ["vue-loader"],
+      },
+      {
         test: /\.css$/, //css样式
         use: [
           "style-loader",
+          "vue-style-loader",
           {
             loader: MiniCssExtractPlugin.loader,
             options: {
@@ -142,5 +163,9 @@ module.exports = {
         ],
       },
     ],
+  },
+  devServer: {
+    port: 3000,
+    hot: true,
   },
 };

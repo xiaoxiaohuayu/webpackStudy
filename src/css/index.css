@@ -5,5 +5,6 @@ body {
 .time_bg {
   width: 200px;
   height: 200px;
+  border: 1px solid rgb(231, 28, 28);
   background-image: url("/src/assets/2.png");
 }
